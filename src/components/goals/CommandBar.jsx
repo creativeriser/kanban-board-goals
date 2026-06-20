@@ -1,5 +1,5 @@
 import { Search, SlidersHorizontal, Plus, X } from 'lucide-react'
-import { useGoalStore, CATEGORIES } from '../../store/useGoalStore'
+import { useGoalStore } from '../../store/useGoalStore'
 import { Button } from '../ui/Button'
 import { Select } from '../ui/Input'
 import { cn } from '../../lib/utils'
@@ -12,6 +12,7 @@ const PRIORITIES = [
 
 export function CommandBar({ onNewGoal }) {
   const { search, priorityFilter, categoryFilter, sortBy } = useGoalStore((s) => s.ui)
+  const categories = useGoalStore((s) => s.categories)
   const setSearch = useGoalStore((s) => s.setSearch)
   const setPriorityFilter = useGoalStore((s) => s.setPriorityFilter)
   const setCategoryFilter = useGoalStore((s) => s.setCategoryFilter)
@@ -64,15 +65,15 @@ export function CommandBar({ onNewGoal }) {
           </button>
         ))}
         <span className="mx-1 h-4 w-px bg-border" />
-        {CATEGORIES.map((c) => (
+        {categories.map((c) => (
           <button
             key={c.id}
             onClick={() => setCategoryFilter(c.id)}
             className={cn(
-              'rounded-full border px-2.5 py-1 text-[12px] font-medium transition-colors',
+              'rounded-full border px-3 py-1 text-[13px] font-medium transition-colors',
               categoryFilter === c.id
-                ? 'border-ink-900 bg-ink-900 text-white'
-                : 'border-border bg-white text-ink-600 hover:border-ink-200'
+                ? 'border-transparent bg-ink-900 text-white'
+                : 'border-border bg-white text-ink-600 hover:bg-canvas'
             )}
           >
             {c.label}

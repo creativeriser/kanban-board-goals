@@ -1,5 +1,5 @@
 import { cn } from '../../lib/utils'
-import { CATEGORIES } from '../../lib/mockData'
+import { useGoalStore } from '../../store/useGoalStore'
 
 const PRIORITY_CONFIG = {
   high: { color: 'bg-ember-500', label: 'High' },
@@ -17,8 +17,6 @@ export function PriorityDot({ priority, showLabel = false, className }) {
   )
 }
 
-const CATEGORY_BY_ID = Object.fromEntries(CATEGORIES.map((c) => [c.id, c]))
-
 const CAT_TONE = {
   moss: 'bg-moss-100 text-moss-700',
   ember: 'bg-ember-100 text-ember-600',
@@ -27,10 +25,12 @@ const CAT_TONE = {
 }
 
 export function CategoryTag({ category, className }) {
-  const cfg = CATEGORY_BY_ID[category]
+  const categories = useGoalStore((s) => s.categories)
+  const cfg = categories.find((c) => c.id === category)
+  
   if (!cfg) return null
   return (
-    <span className={cn('inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium', CAT_TONE[cfg.color], className)}>
+    <span className={cn('inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium', CAT_TONE[cfg.color] || 'bg-ink-100 text-ink-700', className)}>
       {cfg.label}
     </span>
   )

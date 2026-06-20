@@ -100,7 +100,7 @@ Instead: a cool warm-neutral light canvas (`#F7F8FA`), a dark ink sidebar (`#0E1
 |---|---|---|---|
 | Build tool | Vite | `^5.2.11` | Fast HMR, zero-config React JSX, minimal config surface vs. Webpack/CRA. |
 | UI library | React | `^18.3.1` | Required by brief; hooks-based, matches DnD Kit / Recharts ecosystem expectations. |
-| Routing | React Router | `^6.23.1` | Standard SPA routing; `<Outlet>`-based layout nesting used for the persistent sidebar shell. |
+| Routing | React Router | `^6.23.1` | Standard SPA routing; `useOutlet()` layout nesting used to preserve route context for `AnimatePresence` exit animations. |
 | Drag & drop | DnD Kit (`@dnd-kit/core`, `/sortable`, `/utilities`) | `^6.1.0` / `^8.0.0` / `^3.2.2` | Accessible (keyboard + screen-reader support out of the box), unopinionated about rendering, and unlike `react-beautiful-dnd` is actively maintained. See §11 for the full architecture. |
 | Animation | Framer Motion | `^11.2.10` | Declarative, handles layout animations (`layout` prop) needed for milestone-list reflows and drag lift effects without manual FLIP math. |
 | Icons | Lucide React | `^0.383.0` | Consistent 1.5px-stroke icon set, tree-shakeable, matches the Linear/Notion aesthetic family. |
@@ -139,7 +139,7 @@ GoalFlow is currently a **fully client-side single-page application**. There is 
 │                                            ▼                     │
 │                              ┌──────────────────────┐            │
 │                              │   AppShell.jsx        │           │
-│                              │ Sidebar + <Outlet/>   │           │
+│                              │ Sidebar + useOutlet() │           │
 │                              │ (route transitions)   │           │
 │                              └───────────┬───────────┘           │
 │                                          │                       │
@@ -233,7 +233,7 @@ goalflow/
     │   ├── layout/               App chrome
     │   │   ├── Sidebar.jsx       Collapsible dark icon-rail nav
     │   │   ├── TopBar.jsx        Per-page title/subtitle/action header
-    │   │   └── AppShell.jsx      Sidebar + <Outlet> + route-transition wrapper
+    │   │   └── AppShell.jsx      Sidebar + useOutlet() + AnimatePresence transition wrapper
     │   │
     │   └── goals/                 Domain components (know about Goal/Milestone shape)
     │       ├── GoalCard.jsx       Draggable card (useSortable)
@@ -328,7 +328,7 @@ All animation goes through Framer Motion. Conventions actually used in the codeb
 
 | Pattern | Duration | Easing | Where |
 |---|---|---|---|
-| Page transition | `0.18s` | `easeOut`, fade + 8px y-shift | `AppShell.jsx` — wraps `<Outlet>` in `AnimatePresence mode="wait"` |
+| Page transition | `0.18s` | `easeOut`, fade + 8px y-shift | `AppShell.jsx` — wraps `useOutlet()` in `AnimatePresence mode="wait"` |
 | Widget/card stagger-in | `0.35–0.4s`, delayed `0.05s` per item | default spring | Dashboard widgets, Analytics chart cards, Achievements badges |
 | Card hover lift | implicit (`whileHover`) | — | `GoalCard` — `whileHover={ { y: -2 } }` |
 | Drag lift | instant, static transform | — | `GoalDragOverlay` — `rotate(2deg) scale(1.03)`, no animation needed since DnD Kit handles the live transform |
@@ -388,3 +388,9 @@ If `useGoalStore().goals` has a length of 0, `Dashboard.jsx` intercepts the stan
 
 ### Global Profile Avatar
 The `TopBar.jsx` houses the user's avatar. It dynamically computes initials from the `useGoalStore().user.name` state. If the user updates their name via the `/settings` profile form, the `updateUser` Zustand action dispatches the change, instantly reflecting the new initials globally in the sticky TopBar.
+
+### Settings UI Patterns
+The `/settings` route implements strict modern SaaS design patterns (inspired by Vercel and Linear):
+- **Split Layout (`SettingsRow`)**: Forms avoid stacking labels and inputs. Instead, they use a strict side-by-side grid (`sm:flex-row`), locking the label/description to a `240px` width column on the left and the interactive input on the right. 
+- **Edit Mode Protection**: Destructive or sensitive forms (like the Profile tab) default to a read-only state. Users must explicitly click an `Edit Profile` button in the Card Header to unlock the inputs. 
+- **Footer Persistence**: Forms maintain a `border-t bg-canvas/50` explicit footer at the bottom of the card to house the `Save changes` primary action and success banners, completely separated from the scrollable form body.

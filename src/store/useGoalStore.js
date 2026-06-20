@@ -105,6 +105,26 @@ export const useGoalStore = create((set, get) => ({
   updateUser: (patch) =>
     set((s) => ({ user: { ...s.user, ...patch } })),
 
+  categories: CATEGORIES,
+
+  addCategory: (label) => {
+    const id = label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+    if (!id) return null
+    const s = get()
+    if (s.categories.find((c) => c.id === id)) return id
+    
+    // Deterministic hash to assign a theme color automatically
+    const TONES = ['moss', 'ember', 'indigo', 'amber']
+    let hash = 0
+    for (let i = 0; i < id.length; i++) {
+      hash = id.charCodeAt(i) + ((hash << 5) - hash)
+    }
+    const color = TONES[Math.abs(hash) % TONES.length]
+    
+    set({ categories: [...s.categories, { id, label, color }] })
+    return id
+  },
+
   addGoal: ({ title, description, category, priority, dueDate }) =>
     set((s) => {
       const id = uid('g')
@@ -127,4 +147,4 @@ export const useGoalStore = create((set, get) => ({
     }),
 }))
 
-export { CATEGORIES, STATUSES }
+export { STATUSES }

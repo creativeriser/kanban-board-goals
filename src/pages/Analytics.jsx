@@ -19,7 +19,7 @@ import { TopBar } from '../components/layout/TopBar'
 import { Card } from '../components/ui/Card'
 import { useGoalStore } from '../store/useGoalStore'
 import { goalProgress } from '../lib/calculations'
-import { weeklyMomentum, monthlyAchievements, CATEGORIES, currentStreak, longestStreak } from '../lib/mockData'
+import { weeklyMomentum, monthlyAchievements, currentStreak, longestStreak } from '../lib/mockData'
 
 const CATEGORY_HEX = {
   career: '#4C5FD5',
@@ -30,9 +30,17 @@ const CATEGORY_HEX = {
   creative: '#7C8AE8',
 }
 
+const TONE_HEX = {
+  moss: '#2E8A6C',
+  ember: '#FF6B4A',
+  indigo: '#4C5FD5',
+  amber: '#E8A23D',
+}
+
 export default function Analytics() {
   const goals = useGoalStore((s) => s.goals)
   const milestonesById = useGoalStore((s) => s.milestones)
+  const categories = useGoalStore((s) => s.categories)
   const goalList = Object.values(goals)
 
   const completionByCategory = useMemo(() => {
@@ -42,23 +50,23 @@ export default function Analytics() {
       byCategory[g.category].total += 1
       byCategory[g.category].sum += goalProgress(g, milestonesById)
     })
-    return CATEGORIES.map((c) => ({
+    return categories.map((c) => ({
       category: c.label,
-      rate: byCategory[c.category] ? Math.round(byCategory[c.category].sum / byCategory[c.category].total) : 0,
+      rate: byCategory[c.id] ? Math.round(byCategory[c.id].sum / byCategory[c.id].total) : 0,
     }))
-  }, [goalList, milestonesById])
+  }, [goalList, milestonesById, categories])
 
   const categoryDistribution = useMemo(() => {
     const counts = {}
     goalList.forEach((g) => {
       counts[g.category] = (counts[g.category] || 0) + 1
     })
-    return CATEGORIES.filter((c) => counts[c.id]).map((c) => ({
+    return categories.filter((c) => counts[c.id]).map((c) => ({
       name: c.label,
       value: counts[c.id],
-      color: CATEGORY_HEX[c.id],
+      color: CATEGORY_HEX[c.id] || TONE_HEX[c.color] || '#9498A3',
     }))
-  }, [goalList])
+  }, [goalList, categories])
 
   const achievedCount = goalList.filter((g) => g.status === 'achieved').length
   const avgProgress = Math.round(goalList.reduce((sum, g) => sum + goalProgress(g, milestonesById), 0) / goalList.length)

@@ -2,19 +2,23 @@ import { useState } from 'react'
 import { Dialog } from '../ui/Dialog'
 import { Input, Textarea, Select } from '../ui/Input'
 import { Button } from '../ui/Button'
-import { useGoalStore, CATEGORIES } from '../../store/useGoalStore'
+import { useGoalStore } from '../../store/useGoalStore'
 
 const today = new Date().toISOString().slice(0, 10)
 
 export function NewGoalDialog({ open, onClose }) {
   const addGoal = useGoalStore((s) => s.addGoal)
+  const categories = useGoalStore((s) => s.categories)
+  const addCategory = useGoalStore((s) => s.addCategory)
+  
   const [form, setForm] = useState({
     title: '',
     description: '',
-    category: CATEGORIES[0].id,
+    category: categories[0]?.id || '',
     priority: 'medium',
     dueDate: today,
   })
+  const [customCategory, setCustomCategory] = useState('')
 
   function update(field, value) {
     setForm((f) => ({ ...f, [field]: value }))
@@ -23,11 +27,22 @@ export function NewGoalDialog({ open, onClose }) {
   function handleSubmit(e) {
     e.preventDefault()
     if (!form.title.trim()) return
+
+    let finalCategoryId = form.category
+    if (form.category === '__custom__') {
+      if (!customCategory.trim()) return
+      const newId = addCategory(customCategory.trim())
+      if (newId) finalCategoryId = newId
+    }
+
     addGoal({
       ...form,
+      category: finalCategoryId,
       dueDate: new Date(form.dueDate).toISOString(),
     })
-    setForm({ title: '', description: '', category: CATEGORIES[0].id, priority: 'medium', dueDate: today })
+    
+    setForm({ title: '', description: '', category: categories[0]?.id || '', priority: 'medium', dueDate: today })
+    setCustomCategory('')
     onClose()
   }
 
@@ -52,13 +67,25 @@ export function NewGoalDialog({ open, onClose }) {
           onChange={(e) => update('description', e.target.value)}
         />
         <div className="grid grid-cols-2 gap-3">
-          <Select id="goal-category" label="Category" value={form.category} onChange={(e) => update('category', e.target.value)}>
-            {CATEGORIES.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.label}
-              </option>
-            ))}
-          </Select>
+          <div className="flex flex-col gap-2">
+            <Select id="goal-category" label="Category" value={form.category} onChange={(e) => update('category', e.target.value)}>
+              {categories.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.label}
+                </option>
+              ))}
+              <option value="__custom__">+ Custom category...</option>
+            </Select>
+            {form.category === '__custom__' && (
+              <Input
+                id="custom-category"
+                placeholder="e.g. Fitness"
+                value={customCategory}
+                onChange={(e) => setCustomCategory(e.target.value)}
+                required
+              />
+            )}
+          </div>
           <Select id="goal-priority" label="Priority" value={form.priority} onChange={(e) => update('priority', e.target.value)}>
             <option value="high">High</option>
             <option value="medium">Medium</option>
