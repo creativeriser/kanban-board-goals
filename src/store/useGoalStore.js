@@ -96,6 +96,52 @@ export const useGoalStore = create((set, get) => ({
       }
     }),
 
+  updateMilestone: (milestoneId, title) =>
+    set((s) => ({
+      milestones: {
+        ...s.milestones,
+        [milestoneId]: { ...s.milestones[milestoneId], title },
+      },
+    })),
+
+  deleteMilestone: (goalId, milestoneId) =>
+    set((s) => {
+      const newMilestones = { ...s.milestones }
+      delete newMilestones[milestoneId]
+      return {
+        milestones: newMilestones,
+        goals: {
+          ...s.goals,
+          [goalId]: {
+            ...s.goals[goalId],
+            milestoneIds: s.goals[goalId].milestoneIds.filter((id) => id !== milestoneId),
+          },
+        },
+      }
+    }),
+
+  deleteGoal: (goalId) =>
+    set((s) => {
+      const goal = s.goals[goalId]
+      if (!goal) return s
+
+      // Clean up orphaned milestones
+      const newMilestones = { ...s.milestones }
+      goal.milestoneIds.forEach((id) => delete newMilestones[id])
+
+      // Remove from goals
+      const newGoals = { ...s.goals }
+      delete newGoals[goalId]
+
+      // Remove from order tracking
+      const newOrder = {
+        ...s.order,
+        [goal.status]: (s.order[goal.status] || []).filter((id) => id !== goalId),
+      }
+
+      return { goals: newGoals, milestones: newMilestones, order: newOrder }
+    }),
+
   updateGoal: (goalId, patch) =>
     set((s) => ({ goals: { ...s.goals, [goalId]: { ...s.goals[goalId], ...patch } } })),
 

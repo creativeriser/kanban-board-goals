@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Plus, CalendarDays, ListChecks, Pencil, Clock3, Activity } from 'lucide-react'
+import { ArrowLeft, Plus, CalendarDays, ListChecks, Pencil, Clock3, Activity, Trash2, Settings2 } from 'lucide-react'
 import { Card } from '../components/ui/Card'
 import { Button } from '../components/ui/Button'
 import { Input } from '../components/ui/Input'
 import { GrowthRing } from '../components/ui/GrowthRing'
 import { PriorityDot, CategoryTag } from '../components/goals/PriorityDot'
 import { MilestoneRow } from '../components/goals/MilestoneRow'
+import { EditGoalDialog } from '../components/goals/EditGoalDialog'
 import { useGoalStore, STATUSES } from '../store/useGoalStore'
 import { goalProgress, milestoneCounts, formatDueDate } from '../lib/calculations'
 import { format } from 'date-fns'
@@ -24,10 +25,21 @@ export default function GoalDetails() {
   const addMilestone = useGoalStore((s) => s.addMilestone)
   const updateGoalNotes = useGoalStore((s) => s.updateGoalNotes)
   const updateGoal = useGoalStore((s) => s.updateGoal)
+  const deleteGoal = useGoalStore((s) => s.deleteGoal)
+  const updateMilestone = useGoalStore((s) => s.updateMilestone)
+  const deleteMilestone = useGoalStore((s) => s.deleteMilestone)
   const activity = useGoalStore((s) => s.activity.filter((a) => a.goalId === goalId))
 
   const [draftMilestone, setDraftMilestone] = useState('')
   const [notesDraft, setNotesDraft] = useState(goal?.notes ?? '')
+  const [editOpen, setEditOpen] = useState(false)
+
+  function handleDeleteGoal() {
+    if (window.confirm('Are you sure you want to delete this goal and all its milestones? This cannot be undone.')) {
+      deleteGoal(goal.id)
+      navigate('/board', { replace: true })
+    }
+  }
 
   if (!goal) {
     return (
@@ -82,7 +94,25 @@ export default function GoalDetails() {
                   ))}
                 </select>
               </div>
-              <h1 className="font-display text-[28px] font-semibold leading-tight text-ink-900">{goal.title}</h1>
+              <div className="flex items-start justify-between">
+                <h1 className="font-display text-[28px] font-semibold leading-tight text-ink-900">{goal.title}</h1>
+                <div className="flex shrink-0 items-center gap-1">
+                  <button
+                    onClick={() => setEditOpen(true)}
+                    className="flex h-8 w-8 items-center justify-center rounded-md text-ink-500 transition-colors hover:bg-canvas hover:text-ink-900"
+                    aria-label="Edit goal"
+                  >
+                    <Settings2 size={16} />
+                  </button>
+                  <button
+                    onClick={handleDeleteGoal}
+                    className="flex h-8 w-8 items-center justify-center rounded-md text-ink-500 transition-colors hover:bg-red-50 hover:text-red-600"
+                    aria-label="Delete goal"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              </div>
               <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-ink-600">{goal.description}</p>
               <div className="mt-5 flex flex-wrap items-center gap-5 text-[13px] text-ink-600">
                 <span className="inline-flex items-center gap-1.5">
@@ -119,7 +149,13 @@ export default function GoalDetails() {
             <p className="mb-4 font-display text-[16px] font-semibold text-ink-900">Milestones</p>
             <div className="flex flex-col gap-2.5">
               {milestoneList.map((m) => (
-                <MilestoneRow key={m.id} milestone={m} onToggle={toggleMilestone} />
+                <MilestoneRow
+                  key={m.id}
+                  milestone={m}
+                  onToggle={toggleMilestone}
+                  onUpdate={updateMilestone}
+                  onDelete={(mId) => deleteMilestone(goal.id, mId)}
+                />
               ))}
               {milestoneList.length === 0 && (
                 <p className="rounded-lg border border-dashed border-border px-4 py-6 text-center text-[13px] text-ink-400">
@@ -215,6 +251,8 @@ export default function GoalDetails() {
           </Card>
         </motion.div>
       </div>
+
+      <EditGoalDialog open={editOpen} onClose={() => setEditOpen(false)} goal={goal} />
     </div>
   )
 }
