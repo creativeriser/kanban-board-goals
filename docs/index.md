@@ -132,6 +132,10 @@ Instead: a cool warm-neutral light canvas (`#F7F8FA`), a dark ink sidebar (`#0E1
 | Animation | Framer Motion | `^11.2.10` | Declarative, handles layout animations (`layout` prop) needed for milestone-list reflows and drag lift effects without manual FLIP math. |
 | Icons | Lucide React | `^0.383.0` | Consistent 1.5px-stroke icon set, tree-shakeable, matches the Linear/Notion aesthetic family. |
 | Charts | Recharts | `^2.12.7` | Declarative React-native chart composition; used on Dashboard (momentum area chart) and Analytics (bar/line/pie). |
+| Rich Text | Tiptap | `^3.27.1` | Headless editor framework for markdown-like rich text in goal notes. |
+| Command Palette | cmdk | `^1.1.1` | Fast, accessible, unstyled command menu React primitive. |
+| Notifications | Sonner | `^2.0.7` | Opinionated toast component for React. |
+| Visual FX | canvas-confetti | `^1.9.4` | Used for visceral rewards upon goal completion. |
 | State management | Zustand | `^4.5.2` | Chosen over Context API because the board needs frequent, granular updates (drag position, filters) without re-rendering the whole tree — Zustand's selector-based subscriptions (`useGoalStore(s => s.goals)`) avoid the "everything re-renders" problem Context has without `useMemo` gymnastics everywhere. Chosen over Redux for the much smaller boilerplate at this scale. |
 | Styling | Tailwind CSS | `^3.4.3` | Utility-first, design tokens defined once in `tailwind.config.js` (see §6), no separate CSS-in-JS runtime cost. |
 | Dates | date-fns | `^3.6.0` | Tree-shakeable, immutable, used for all date formatting/diffing (`formatDueDate`, `dueMeta`). |
@@ -287,7 +291,10 @@ goalflow/
     │   │   ├── Dialog.jsx       Modal, Framer Motion enter/exit
     │   │   ├── Popover.jsx      Accessible popover with click-outside and Framer Motion enter/exit
     │   │   ├── Tooltip.jsx      (exports Tooltip, EmptyState)
-    │   │   └── GrowthRing.jsx   ★ The signature visual element — see §6.7
+    │   │   ├── GrowthRing.jsx   ★ The signature visual element — see §6.7
+    │   │   ├── CommandMenu.jsx  Global search & actions (Cmd+K)
+    │   │   ├── DropdownMenu.jsx Reusable menu primitive
+    │   │   └── RichTextEditor.jsx Tiptap-powered rich text input
     │   │
     │   ├── layout/               App chrome
     │   │   ├── Sidebar.jsx       Collapsible dark icon-rail nav
@@ -301,6 +308,8 @@ goalflow/
     │       ├── CommandBar.jsx       Search + sort + filter chips + "New Goal" button
     │       ├── MilestoneRow.jsx     Single milestone checkbox row
     │       ├── NewGoalDialog.jsx    "Create goal" form inside <Dialog>
+    │       ├── EditGoalDialog.jsx   Modal to edit goal properties
+    │       ├── TrashDropZone.jsx    Animated drop zone for deletion
     │       └── PriorityDot.jsx      (exports PriorityDot, CategoryTag)
     │
     └── pages/                     One file per route, composed from the above

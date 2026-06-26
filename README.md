@@ -1,6 +1,6 @@
 # GoalFlow — Personal Goal Management Kanban Platform
 
-A premium, opinionated goal-tracking SaaS — Dashboard, drag-and-drop Goals Board, Goal Details, Analytics, Achievements, and Settings — built with React, Vite, Tailwind, DnD Kit, Framer Motion, Recharts, and Zustand.
+A premium, opinionated goal-tracking SaaS — Dashboard, drag-and-drop Goals Board, Goal Details, Analytics, Achievements, and Settings — built with React, Vite, Tailwind, DnD Kit, Framer Motion, Recharts, Zustand, Tiptap, cmdk, and Sonner.
 
 ## Run it
 
@@ -26,13 +26,13 @@ The signature visual motif is the **Growth Ring** (`src/components/ui/GrowthRing
 
 ## Architecture
 
-- `src/store/useGoalStore.js` — single Zustand store: normalized `goals`/`milestones`, per-column `order`, and `ui` (search/filter/sort) state. All progress/streak numbers are derived, never duplicated.
+- `src/store/useGoalStore.js` — single Zustand store: normalized `goals`/`milestones`, per-column `order`, and `ui` (search/filter/sort) state. All progress/streak numbers are derived, never duplicated. Includes a robust soft-delete (trash) architecture.
 - `src/lib/mockData.js` — seed data (10 goals across all 4 stages, realistic milestones, activity feed).
 - `src/lib/calculations.js` — progress %, due-date formatting, sorting, distribution helpers.
-- `src/components/ui/` — design-system primitives (Button, Badge, Card, Input/Select/Textarea, Dialog, Tooltip, EmptyState, GrowthRing).
-- `src/components/goals/` — board-specific pieces (GoalCard, KanbanColumn, CommandBar, GoalDragOverlay, MilestoneRow, NewGoalDialog, PriorityDot/CategoryTag).
+- `src/components/ui/` — design-system primitives (Button, Badge, Card, Input/Select/Textarea, Dialog, Tooltip, EmptyState, GrowthRing, CommandMenu, DropdownMenu, Popover, RichTextEditor).
+- `src/components/goals/` — board-specific pieces (GoalCard, KanbanColumn, CommandBar, GoalDragOverlay, MilestoneRow, NewGoalDialog, EditGoalDialog, TrashDropZone, PriorityDot/CategoryTag).
 - `src/components/layout/` — Sidebar, TopBar, AppShell (route-transition wrapper).
-- `src/pages/` — Dashboard, GoalsBoard, GoalDetails, Analytics, Achievements, Settings.
+- `src/pages/` — Dashboard, GoalsBoard, GoalDetails, Analytics, Achievements, Settings, Trash.
 
 ### DnD Kit
 
