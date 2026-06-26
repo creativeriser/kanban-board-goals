@@ -85,8 +85,17 @@ export default function GoalsBoard() {
     setActiveId(null)
     
     const finalStatus = goals[active.id]?.status
-    if (finalStatus === 'achieved' && originalStatus !== 'achieved' && preferences?.notifications?.celebrations) {
-      triggerConfetti()
+    if (finalStatus && finalStatus !== originalStatus) {
+      if (finalStatus === 'achieved' && preferences?.notifications?.celebrations) {
+        triggerConfetti()
+      }
+      
+      const statusLabel = STATUSES.find(st => st.id === finalStatus)?.label || finalStatus
+      useGoalStore.getState().addActivity(
+        `Moved "${goals[active.id]?.title}" to ${statusLabel}`,
+        finalStatus === 'achieved' ? 'achieved' : 'status',
+        active.id
+      )
     }
     setOriginalStatus(null)
 

@@ -35,22 +35,25 @@ export function GoalCard({ goalId, dragHandleOnly = false }) {
   }
 
   return (
-    <motion.div
+    <div
       ref={setNodeRef}
       style={style}
       {...(dragHandleOnly ? {} : { ...attributes, ...listeners })}
-      initial={{ opacity: 0, y: 6 }}
-      animate={{ opacity: isDragging ? 0.4 : 1, y: 0 }}
-      whileHover={{ y: -2 }}
-      transition={{ duration: 0.18 }}
-      onClick={() => navigate(`/goals/${goal.id}`)}
-      className={cn(
-        'group cursor-grab select-none rounded-lg border border-border bg-surface shadow-card active:cursor-grabbing',
-        'hover:border-ink-200 hover:shadow-raised transition-all duration-200',
-        isDragging && 'ring-2 ring-moss-500/40',
-        density === 'compact' ? 'p-3' : 'p-4'
-      )}
+      className={isDragging ? 'z-50' : ''}
     >
+      <motion.div
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: isDragging ? 0.4 : 1, y: 0 }}
+        whileHover={{ y: -2 }}
+        transition={{ duration: 0.18 }}
+        onClick={() => navigate(`/goals/${goal.id}`)}
+        className={cn(
+          'group cursor-grab select-none rounded-lg border border-border bg-surface shadow-card active:cursor-grabbing',
+          'hover:border-ink-200 hover:shadow-raised transition-all duration-200',
+          isDragging && 'ring-2 ring-moss-500/40',
+          density === 'compact' ? 'p-3' : 'p-4'
+        )}
+      >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="mb-1.5 flex items-center gap-2">
@@ -92,5 +95,6 @@ export function GoalCard({ goalId, dragHandleOnly = false }) {
         </span>
       </div>
     </motion.div>
+    </div>
   )
 }

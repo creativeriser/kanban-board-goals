@@ -17,7 +17,7 @@ export function TopBar({ title, subtitle, action }) {
     : 'U'
 
   return (
-    <header className="flex items-center justify-between border-b border-border bg-canvas/80 px-4 md:px-8 py-4 md:py-5 backdrop-blur-sm sticky top-0 z-10">
+    <header className="flex h-[72px] shrink-0 items-center justify-between border-b border-border bg-canvas/95 px-4 md:px-8 backdrop-blur-md sticky top-0 z-10">
       <div className="flex items-center gap-3">
         <button 
           onClick={() => setMobileSidebarOpen(true)}

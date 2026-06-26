@@ -57,6 +57,7 @@ export const useGoalStore = create(
     sortBy: 'priority', // 'priority' | 'dueDate' | 'alphabetical'
     mobileSidebarOpen: false,
     newGoalModalOpen: false,
+    sidebarWidth: 260, // Default width tuned for optimal typography breathing room
   },
 
   setSearch: (search) => set((s) => ({ ui: { ...s.ui, search } })),
@@ -67,6 +68,7 @@ export const useGoalStore = create(
   setSortBy: (sortBy) => set((s) => ({ ui: { ...s.ui, sortBy } })),
   setMobileSidebarOpen: (open) => set((s) => ({ ui: { ...s.ui, mobileSidebarOpen: open } })),
   setNewGoalModalOpen: (open) => set((s) => ({ ui: { ...s.ui, newGoalModalOpen: open } })),
+  setSidebarWidth: (width) => set((s) => ({ ui: { ...s.ui, sidebarWidth: width } })),
   clearFilters: () => set((s) => ({ ui: { ...s.ui, search: '', priorityFilter: null, categoryFilter: null } })),
 
   // Move a goal to a new status/column, optionally at a specific index
@@ -83,21 +85,12 @@ export const useGoalStore = create(
       }
       order[toStatus] = targetList
 
-      const newActivity = {
-        id: uid('a'),
-        goalId: goalId,
-        text: `Moved "${s.goals[goalId].title}" to ${STATUSES.find(st => st.id === toStatus)?.label || toStatus}`,
-        type: toStatus === 'achieved' ? 'achieved' : 'status',
-        time: new Date().toISOString()
-      }
-
       return {
         order,
         goals: {
           ...s.goals,
           [goalId]: { ...s.goals[goalId], status: toStatus },
         },
-        activity: [newActivity, ...s.activity].slice(0, 20)
       }
     }),
 

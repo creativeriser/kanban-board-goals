@@ -5,3 +5,6 @@ dist
 .env
 .vitepress/dist
 .vitepress/cache
+
+# Proprietary Docs
+documentation/

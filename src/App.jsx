@@ -9,6 +9,7 @@ import Analytics from './pages/Analytics'
 import Achievements from './pages/Achievements'
 import Trash from './pages/Trash'
 import Settings from './pages/Settings'
+import Docs from './pages/Docs'
 
 function AnimatedRoutes() {
   return (
@@ -20,6 +21,7 @@ function AnimatedRoutes() {
       <Route path="/achievements" element={<Achievements />} />
       <Route path="/trash" element={<Trash />} />
       <Route path="/settings" element={<Settings />} />
+      <Route path="/docs" element={<Docs />} />
     </Routes>
   )
 }
