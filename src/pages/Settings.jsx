@@ -82,7 +82,7 @@ export default function Settings() {
               ))}
             </nav>
             <div className="hidden lg:block h-px w-full bg-border" />
-            {user ? (
+            {user && (
               <button
                 onClick={() => {
                   logout()
@@ -92,14 +92,6 @@ export default function Settings() {
               >
                 <LogOut size={16} />
                 Sign out
-              </button>
-            ) : (
-              <button
-                onClick={() => navigate('/auth')}
-                className="flex shrink-0 items-center gap-3 rounded-md px-3 py-2.5 text-left text-sm font-medium text-brand-600 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-brand-500 hover:bg-brand-50 hover:text-brand-700 dark:text-brand-500 dark:hover:bg-brand-500/10 dark:hover:text-brand-400"
-              >
-                <LogIn size={16} />
-                Sign in
               </button>
             )}
           </div>

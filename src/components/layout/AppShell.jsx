@@ -10,45 +10,6 @@ export function AppShell({ children }) {
   const setMobileSidebarOpen = useGoalStore((s) => s.setMobileSidebarOpen)
   const newGoalModalOpen = useGoalStore((s) => s.ui.newGoalModalOpen)
   const setNewGoalModalOpen = useGoalStore((s) => s.setNewGoalModalOpen)
-  const theme = useGoalStore((s) => s.preferences?.appearance?.theme || 'light')
-  const accentHex = useGoalStore((s) => s.preferences?.appearance?.accent || '#1B6F5C')
-
-  useEffect(() => {
-    const root = document.documentElement
-    
-    // Apply Accent
-    const HEX_TO_ACCENT = {
-      '#1B6F5C': 'moss',
-      '#4C5FD5': 'indigo',
-      '#FF6B4A': 'ember',
-      '#E8A23D': 'amber',
-    }
-    const accentName = HEX_TO_ACCENT[accentHex] || 'moss'
-    root.setAttribute('data-accent', accentName)
-    
-    // Apply Theme
-    function applyTheme() {
-      if (theme === 'dark') {
-        root.classList.add('dark')
-      } else if (theme === 'light') {
-        root.classList.remove('dark')
-      } else {
-        // System
-        const systemIsDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-        if (systemIsDark) root.classList.add('dark')
-        else root.classList.remove('dark')
-      }
-    }
-
-    applyTheme()
-    
-    if (theme === 'system') {
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-      const listener = () => applyTheme()
-      mediaQuery.addEventListener('change', listener)
-      return () => mediaQuery.removeEventListener('change', listener)
-    }
-  }, [theme, accentHex])
 
   useEffect(() => {
     function handleKeyDown(e) {
