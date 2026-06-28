@@ -11,7 +11,7 @@ export function uid(prefix = 'id') {
 }
 
 export function triggerConfetti(brandColor = '#1B6F5C') {
-  const duration = 2000
+  const duration = 3500
   const end = Date.now() + duration
   const colors = [brandColor, '#FFFFFF', brandColor, '#E8A23D']
 
