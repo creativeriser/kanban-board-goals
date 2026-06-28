@@ -46,8 +46,8 @@ export default function Trash() {
             <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-ink-900/5 text-ink-400 dark:bg-white/5">
               <Trash2 size={24} />
             </div>
-            <h2 className="font-display text-[18px] font-semibold text-ink-900">Trash is empty</h2>
-            <p className="mt-1 text-[13px] text-ink-500 max-w-[240px]">Goals you delete from the board will appear here for safekeeping.</p>
+            <h2 className="font-display text-lg font-semibold text-ink-900">Trash is empty</h2>
+            <p className="mt-1 text-sm text-ink-500 max-w-[240px]">Goals you delete from the board will appear here for safekeeping.</p>
           </div>
         ) : (
           <div className="flex flex-col gap-3 max-w-4xl mx-auto">
@@ -63,10 +63,10 @@ export default function Trash() {
                 >
                   <Card className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 shadow-sm border border-border/60 transition-colors hover:border-border">
                     <div>
-                      <p className="font-medium text-[14.5px] text-ink-900 line-through opacity-70">{goal.title}</p>
+                      <p className="font-medium text-sm text-ink-900 line-through opacity-70">{goal.title}</p>
                       <div className="mt-1.5 flex items-center gap-2 opacity-70">
                         <CategoryTag category={goal.category} />
-                        <span className="text-[12px] font-mono text-ink-400">
+                        <span className="text-xs font-mono text-ink-400">
                           {new Date(goal.createdAt).toLocaleDateString()}
                         </span>
                       </div>
