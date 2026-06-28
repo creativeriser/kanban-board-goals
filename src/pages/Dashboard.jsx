@@ -70,8 +70,8 @@ export default function Dashboard() {
               <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-brand-100 text-brand-600 dark:bg-brand-500/20 dark:text-brand-400">
                 <Rocket size={40} strokeWidth={1.5} />
               </div>
-              <h2 className="mb-3 font-display text-[28px] font-semibold text-ink-900">Your board is empty</h2>
-              <p className="mb-8 max-w-sm text-[15px] leading-relaxed text-ink-600">
+              <h2 className="mb-3 font-display text-3xl font-semibold text-ink-900">Your board is empty</h2>
+              <p className="mb-8 max-w-sm text-base leading-relaxed text-ink-600">
                 GoalFlow is a space to define your ambitions and break them into actionable milestones. It's time to build momentum.
               </p>
               <Button variant="brand" size="lg" onClick={() => setNewGoalModalOpen(true)}>
@@ -111,11 +111,11 @@ export default function Dashboard() {
           <Card className="relative overflow-hidden p-7">
             <div className="relative z-10 flex items-start justify-between gap-6">
               <div>
-                <p className="text-[12px] font-semibold uppercase tracking-wide text-brand-600">This month</p>
-                <h2 className="mt-1.5 font-display text-[28px] font-semibold leading-tight text-ink-900">
+                <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">This month</p>
+                <h2 className="mt-1.5 font-display text-3xl font-semibold leading-tight text-ink-900">
                   You're {monthlyProgress}% toward your monthly goals
                 </h2>
-                <p className="mt-2 max-w-md text-[13.5px] text-ink-600">
+                <p className="mt-2 max-w-md text-sm text-ink-600">
                   {active.length} active goals in motion, {completed.length} achieved all-time. Momentum is building —
                   keep the streak alive.
                 </p>
@@ -131,28 +131,33 @@ export default function Dashboard() {
 
           <Card className="flex flex-col p-6">
             <div className="mb-1 flex items-center justify-between">
-              <p className="font-display text-[15px] font-semibold text-ink-900">Weekly Momentum</p>
-              <span className="inline-flex items-center gap-1 text-[12px] font-medium text-brand-600">
+              <p className="font-display text-base font-semibold text-ink-900">Weekly Momentum</p>
+              <span className={cn(
+                "inline-flex items-center gap-1 text-xs font-medium",
+                momentumChange > 0 ? "text-moss-600 dark:text-moss-500" :
+                momentumChange < 0 ? "text-ember-600 dark:text-ember-500" :
+                "text-ink-500"
+              )}>
                 <TrendingUp size={13} className={cn("transition-transform", momentumChange < 0 && "rotate-180")} /> 
                 {momentumChange > 0 ? '+' : ''}{momentumChange}%
               </span>
             </div>
-            <p className="mb-2 text-[12px] text-ink-600">Milestones completed, last {weeklyMomentum.length} weeks</p>
+            <p className="mb-2 text-xs text-ink-600">Milestones completed, last {weeklyMomentum.length} weeks</p>
             <div className="-ml-2 h-[120px] flex-1">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={weeklyMomentum} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
                   <defs>
                     <linearGradient id="momentumFill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#1B6F5C" stopOpacity={0.35} />
-                      <stop offset="100%" stopColor="#1B6F5C" stopOpacity={0} />
+                      <stop offset="0%" stopColor="rgb(var(--color-brand-600))" stopOpacity={0.35} />
+                      <stop offset="100%" stopColor="rgb(var(--color-brand-600))" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <XAxis dataKey="week" tick={{ fontSize: 10, fill: '#9498A3' }} axisLine={false} tickLine={false} />
                   <RTooltip
-                    contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #E6E8EC' }}
+                    contentStyle={{ fontSize: 12, borderRadius: 8, backgroundColor: 'rgb(var(--color-surface))', borderColor: 'rgb(var(--color-border))', color: 'rgb(var(--color-ink-900))' }}
                     labelStyle={{ fontWeight: 600 }}
                   />
-                  <Area type="monotone" dataKey="completed" stroke="#1B6F5C" strokeWidth={2} fill="url(#momentumFill)" />
+                  <Area type="monotone" dataKey="completed" stroke="rgb(var(--color-brand-600))" strokeWidth={2} fill="url(#momentumFill)" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -173,12 +178,12 @@ export default function Dashboard() {
                     className="flex items-center justify-between gap-3 rounded px-2 py-2 transition-colors hover:bg-ink-900/5 dark:hover:bg-white/5"
                   >
                     <div className="min-w-0">
-                      <p className="truncate text-[13px] font-medium text-ink-900">{g.title}</p>
+                      <p className="truncate text-sm font-medium text-ink-900">{g.title}</p>
                       <CategoryTag category={g.category} className="mt-1" />
                     </div>
                     <span
                       className={cn(
-                        'shrink-0 text-[12px] font-medium',
+                        'shrink-0 text-xs font-medium',
                         due.tone === 'overdue' && 'text-ember-600',
                         due.tone === 'soon' && 'text-amber-600'
                       )}
@@ -225,7 +230,7 @@ export default function Dashboard() {
                     )}
                   />
                   <div className="min-w-0">
-                    <p className="text-[12.5px] leading-snug text-ink-700">{a.text}</p>
+                    <p className="text-sm leading-snug text-ink-700">{a.text}</p>
                     <p className="font-mono text-[11px] text-ink-400 mt-0.5">{formatDistanceToNow(new Date(a.time), { addSuffix: true })}</p>
                   </div>
                 </div>
@@ -250,7 +255,7 @@ function Stat({ icon: Icon, label, value, accent = 'ink' }) {
         <Icon size={15} />
       </div>
       <div>
-        <p className="font-mono text-[15px] font-semibold leading-none text-ink-900">{value}</p>
+        <p className="font-mono text-base font-semibold leading-none text-ink-900">{value}</p>
         <p className="mt-0.5 text-[11px] text-ink-600">{label}</p>
       </div>
     </div>
@@ -263,7 +268,7 @@ function Widget({ title, icon: Icon, children, delay = 0 }) {
       <Card className="h-full p-5">
         <div className="mb-3 flex items-center gap-2">
           <Icon size={15} className="text-ink-400" />
-          <p className="font-display text-[14.5px] font-semibold text-ink-900">{title}</p>
+          <p className="font-display text-sm font-semibold text-ink-900">{title}</p>
         </div>
         {children}
       </Card>
@@ -272,5 +277,5 @@ function Widget({ title, icon: Icon, children, delay = 0 }) {
 }
 
 function EmptyRow({ text }) {
-  return <p className="px-2 py-2 text-[12.5px] text-ink-400">{text}</p>
+  return <p className="px-2 py-2 text-sm text-ink-400">{text}</p>
 }
