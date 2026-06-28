@@ -48,8 +48,8 @@ export function GoalCard({ goalId, dragHandleOnly = false }) {
         transition={{ duration: 0.18 }}
         onClick={() => navigate(`/goals/${goal.id}`)}
         className={cn(
-          'group cursor-grab select-none rounded-lg border border-border bg-surface shadow-card active:cursor-grabbing',
-          'hover:border-ink-200 hover:shadow-raised transition-all duration-200',
+          'group cursor-grab select-none rounded-lg border border-border bg-surface shadow-card dark:shadow-dark-card active:cursor-grabbing',
+          'hover:border-ink-200 hover:shadow-raised dark:hover:shadow-dark-raised transition-all duration-200',
           isDragging && 'ring-2 ring-moss-500/40',
           density === 'compact' ? 'p-3' : 'p-4'
         )}
@@ -62,7 +62,7 @@ export function GoalCard({ goalId, dragHandleOnly = false }) {
           </div>
           <h3 className={cn(
             "truncate font-display font-semibold leading-snug text-ink-900",
-            density === 'compact' ? 'text-[14px]' : 'text-[15px]'
+            density === 'compact' ? 'text-sm' : 'text-base'
           )}>
             {goal.title}
           </h3>

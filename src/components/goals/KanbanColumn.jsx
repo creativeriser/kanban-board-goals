@@ -21,7 +21,7 @@ export function KanbanColumn({ status, label, goalIds, avgProgress }) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className={cn('h-2 w-2 rounded-full', STATUS_TONE[status])} />
-            <h2 className="font-display text-[15px] font-semibold text-ink-900">{label}</h2>
+            <h2 className="font-display text-base font-semibold text-ink-900">{label}</h2>
             <span className="rounded-full bg-ink-900/5 px-1.5 py-0.5 font-mono text-[11px] text-ink-600">
               {goalIds.length}
             </span>
