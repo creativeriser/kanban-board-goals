@@ -56,6 +56,7 @@ export default function Analytics() {
     return categories.map((c) => ({
       category: c.label,
       rate: byCategory[c.id] ? Math.round(byCategory[c.id].sum / byCategory[c.id].total) : 0,
+      color: CATEGORY_HEX[c.id] || TONE_HEX[c.color] || '#9498A3',
     }))
   }, [goalList, milestonesById, categories])
 
@@ -116,8 +117,12 @@ export default function Analytics() {
                     <CartesianGrid vertical={false} stroke="#E6E8EC" />
                     <XAxis dataKey="category" tick={{ fontSize: 11, fill: '#565B66' }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fontSize: 11, fill: '#9498A3' }} axisLine={false} tickLine={false} unit="%" />
-                    <RTooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #E6E8EC' }} />
-                    <Bar dataKey="rate" fill="#1B6F5C" radius={[6, 6, 0, 0]} maxBarSize={42} />
+                    <RTooltip contentStyle={{ fontSize: 12, borderRadius: 8, backgroundColor: 'rgb(var(--color-surface))', borderColor: 'rgb(var(--color-border))', color: 'rgb(var(--color-ink-900))' }} />
+                    <Bar dataKey="rate" radius={[6, 6, 0, 0]} maxBarSize={42}>
+                      {completionByCategory.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Bar>
                   </BarChart>
                 </ResponsiveContainer>
               </ChartCard>
@@ -128,9 +133,9 @@ export default function Analytics() {
                     <CartesianGrid vertical={false} stroke="#E6E8EC" />
                     <XAxis dataKey="week" tick={{ fontSize: 11, fill: '#565B66' }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fontSize: 11, fill: '#9498A3' }} axisLine={false} tickLine={false} />
-                    <RTooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #E6E8EC' }} />
-                    <Line type="monotone" dataKey="actual" stroke="#4C5FD5" strokeWidth={2.5} dot={{ r: 3 }} />
-                    <Line type="monotone" dataKey="trend" stroke="#9498A3" strokeWidth={1.5} strokeDasharray="4 4" dot={false} />
+                    <RTooltip contentStyle={{ fontSize: 12, borderRadius: 8, backgroundColor: 'rgb(var(--color-surface))', borderColor: 'rgb(var(--color-border))', color: 'rgb(var(--color-ink-900))' }} />
+                    <Line type="monotone" dataKey="actual" stroke="rgb(var(--color-brand-500))" strokeWidth={2.5} dot={{ r: 3 }} />
+                    <Line type="monotone" dataKey="trend" stroke="rgb(var(--color-ink-400))" strokeWidth={1.5} strokeDasharray="4 4" dot={false} />
                   </LineChart>
                 </ResponsiveContainer>
               </ChartCard>
@@ -141,8 +146,8 @@ export default function Analytics() {
                     <CartesianGrid vertical={false} stroke="#E6E8EC" />
                     <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#565B66' }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fontSize: 11, fill: '#9498A3' }} axisLine={false} tickLine={false} allowDecimals={false} />
-                    <RTooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #E6E8EC' }} />
-                    <Bar dataKey="achieved" fill="#FF6B4A" radius={[6, 6, 0, 0]} maxBarSize={32} />
+                    <RTooltip contentStyle={{ fontSize: 12, borderRadius: 8, backgroundColor: 'rgb(var(--color-surface))', borderColor: 'rgb(var(--color-border))', color: 'rgb(var(--color-ink-900))' }} />
+                    <Bar dataKey="achieved" fill="rgb(var(--color-moss-500))" radius={[6, 6, 0, 0]} maxBarSize={32} />
                   </BarChart>
                 </ResponsiveContainer>
               </ChartCard>
@@ -156,12 +161,12 @@ export default function Analytics() {
                           <Cell key={entry.name} fill={entry.color} stroke="none" />
                         ))}
                       </Pie>
-                      <RTooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #E6E8EC' }} />
+                      <RTooltip contentStyle={{ fontSize: 12, borderRadius: 8, backgroundColor: 'rgb(var(--color-surface))', borderColor: 'rgb(var(--color-border))', color: 'rgb(var(--color-ink-900))' }} />
                     </PieChart>
                   </ResponsiveContainer>
                   <div className="flex flex-1 flex-col gap-2">
                     {categoryDistribution.map((c) => (
-                      <div key={c.name} className="flex items-center justify-between text-[12.5px]">
+                      <div key={c.name} className="flex items-center justify-between text-sm">
                         <span className="flex items-center gap-2 text-ink-700">
                           <span className="h-2 w-2 rounded-full" style={{ backgroundColor: c.color }} />
                           {c.name}
@@ -176,8 +181,8 @@ export default function Analytics() {
 
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mt-5">
               <Card className="p-6">
-                <p className="mb-1 font-display text-[15px] font-semibold text-ink-900">Performance Insights</p>
-                <ul className="mt-3 flex flex-col gap-2 text-[13px] text-ink-600">
+                <p className="mb-1 font-display text-base font-semibold text-ink-900">Performance Insights</p>
+                <ul className="mt-3 flex flex-col gap-2 text-sm text-ink-600">
                   <li>• {completionByCategory.length > 0 ? `${completionByCategory.sort((a,b)=>b.rate-a.rate)[0]?.category} is your strongest category.` : 'Start adding goals to see insights.'}</li>
                   <li>• {weeklyMomentum[7]?.completed > weeklyMomentum[6]?.completed ? 'Your weekly momentum is trending upward — milestone completions are up.' : 'Weekly momentum is steady or dipping. Try to complete a small milestone today.'}</li>
                   <li>• {currentStreak > 3 ? `You are on a ${currentStreak}-day streak! Keep up the incredible consistency.` : 'Consistency builds momentum. Try to build a 3-day streak this week.'}</li>
@@ -204,7 +209,7 @@ function KpiCard({ icon: Icon, label, value, accent }) {
         <Icon size={16} />
       </div>
       <p className="font-mono text-2xl font-semibold text-ink-900">{value}</p>
-      <p className="mt-0.5 text-[12px] text-ink-600">{label}</p>
+      <p className="mt-0.5 text-xs text-ink-600">{label}</p>
     </Card>
   )
 }
@@ -213,8 +218,8 @@ function ChartCard({ title, subtitle, children, delay = 0 }) {
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, delay }}>
       <Card className="p-6">
-        <p className="font-display text-[15px] font-semibold text-ink-900">{title}</p>
-        <p className="mb-3 text-[12px] text-ink-600">{subtitle}</p>
+        <p className="font-display text-base font-semibold text-ink-900">{title}</p>
+        <p className="mb-3 text-xs text-ink-600">{subtitle}</p>
         {children}
       </Card>
     </motion.div>
