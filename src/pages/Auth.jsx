@@ -147,11 +147,11 @@ export default function Auth() {
           </div>
 
           <div className="flex gap-3">
-            <Button variant="secondary" className="w-full justify-center border-border/50 hover:bg-ink-900/5 transition-all duration-300 ease-out shadow-sm" type="button" onClick={handleSubmit} disabled={isLoading}>
+            <Button variant="secondary" className="w-full justify-center border-border/50 hover:bg-ink-900/5 dark:hover:bg-white/5 transition-all duration-300 ease-out shadow-sm" type="button" onClick={handleSubmit} disabled={isLoading}>
               <GoogleIcon className="h-4 w-4 mr-2" />
               Google
             </Button>
-            <Button variant="secondary" className="w-full justify-center border-border/50 hover:bg-ink-900/5 transition-all duration-300 ease-out shadow-sm" type="button" onClick={handleSubmit} disabled={isLoading}>
+            <Button variant="secondary" className="w-full justify-center border-border/50 hover:bg-ink-900/5 dark:hover:bg-white/5 transition-all duration-300 ease-out shadow-sm" type="button" onClick={handleSubmit} disabled={isLoading}>
               <Github className="h-4 w-4 mr-2" />
               GitHub
             </Button>
@@ -170,11 +170,11 @@ export default function Auth() {
         </motion.div>
       </div>
         {/* Right Column - Brand/Decorative */}
-        <div className="relative hidden w-1/2 overflow-hidden bg-[#0A1017] lg:block">
+        <div className="relative hidden w-1/2 overflow-hidden bg-[#0A1017] dark:bg-surface lg:block transition-colors">
           
           {/* Subtle glowing spotlight to ground the text */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="h-96 w-96 rounded-full bg-[#10b981] opacity-5 blur-[100px]" />
+            <div className="h-96 w-96 rounded-full bg-[#10b981] opacity-5 dark:opacity-10 blur-[100px]" />
           </div>
           
           {/* Subtle grid pattern overlay */}
