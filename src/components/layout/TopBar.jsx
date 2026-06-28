@@ -105,18 +105,6 @@ export function TopBar({ title, subtitle, action }) {
                 </button>
               }
             >
-              <DropdownItem icon={SettingsIcon} onClick={() => navigate('/settings')}>
-                Settings
-              </DropdownItem>
-              
-              <DropdownItem 
-                icon={theme === 'dark' ? Sun : Moon} 
-                onClick={() => updatePreferences('appearance', { theme: theme === 'dark' ? 'light' : 'dark' })}
-              >
-                {theme === 'dark' ? 'Light mode' : 'Dark mode'}
-              </DropdownItem>
-              
-              <DropdownSeparator />
               <DropdownItem icon={LogOut} onClick={() => logout()}>
                 Sign out
               </DropdownItem>
