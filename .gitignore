@@ -8,3 +8,4 @@ dist
 
 # Proprietary Docs
 documentation/
+scripts/generate_docs.cjs

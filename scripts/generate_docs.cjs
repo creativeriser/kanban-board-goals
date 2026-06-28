@@ -35,5 +35,33 @@ for (const file of srcFiles) {
   massiveContent += '```' + ext + '\n' + content + '\n```\n\n';
 }
 
-fs.appendFileSync('documentation/developer_guide.md', massiveContent);
-console.log(`Appended ${srcFiles.length} files to developer_guide.md`);
+const docPath = 'documentation/developer_guide.md';
+const docContent = fs.readFileSync(docPath, 'utf-8');
+
+// Find the index of the start of section 9
+const sectionHeading = '# 9. Exhaustive Component Reference (Deep Dive)';
+const sectionIndex = docContent.indexOf(sectionHeading);
+
+let newDocContent;
+if (sectionIndex !== -1) {
+  // If the section exists, replace everything from the section heading onwards
+  // We need to keep whatever was before the heading, but the heading itself is part of massiveContent
+  // wait, massiveContent has the heading but also prepends '\n\n---\n\n'
+  // So we should find where '\n\n---\n\n# 9. Exhaustive Component Reference (Deep Dive)' starts
+  const fullHeading = '\\n\\n---\\n\\n# 9. Exhaustive Component Reference (Deep Dive)';
+  const fullIndex = docContent.indexOf('---\\n\\n# 9. Exhaustive Component Reference');
+  
+  if (fullIndex !== -1) {
+    // Cut off everything from the divider onwards
+    newDocContent = docContent.substring(0, fullIndex - 2) + massiveContent;
+  } else {
+    // Just cut from the heading
+    newDocContent = docContent.substring(0, sectionIndex) + massiveContent;
+  }
+} else {
+  // If it doesn't exist, just append
+  newDocContent = docContent + massiveContent;
+}
+
+fs.writeFileSync(docPath, newDocContent);
+console.log(`Updated ${srcFiles.length} files in developer_guide.md snapshot section.`);
